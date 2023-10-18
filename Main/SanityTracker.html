@@ -1,0 +1,383 @@
+<!--
+Copyright:
+The MIT License (MIT)
+
+Copyright (c) 2023 Phasmophobia Sanity Tracker - J. D (Sixthxz)
+
+Permiso otorgado a cualquier persona que obtenga una copia
+de este software y los archivos de documentación asociados
+(el "Software"), para tratar el Software sin restricciones,
+incluyendo, sin limitación, los derechos de uso, copia,
+modificación, fusión, publicación, distribución, sublicencia y / o venta de
+copias del Software, y para permitir a las personas a las que el
+Software se suministra para hacerlo, sujeto a las siguientes
+condiciones:
+
+El aviso de copyright anterior y este permiso serán incluidos en
+todos las copias o partes sustanciales del Software.
+
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPLÍCITA O IMPLÍCITA,
+INCLUYENDO, PERO NO LIMITADO A, LAS GARANTÍAS DE COMERCIALIZACIÓN,
+APTITUD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO EL
+AUTOR O TITULARES DE DERECHOS DE AUTOR SERÁN RESPONSABLES DE CUALQUIER RECLAMACIÓN,
+DAMAGES U OTRAS RESPONSABILIDADES, YA SEA EN UNA ACCIÓN DE CONTRATO,
+AGRIO O DE OTRO MODO, DERIVADAS DE, FUERA O EN CONEXIÓN CON EL
+SOFTWARE O EL USO U OTRAS NEGOCIACIONES EN EL PROGRAMA.
+
+
+The MIT License (MIT) EN
+
+Copyright (c) 2023 Phasmophobia Sanity Tracker - J. D (Sixthxz)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+Disclaimers:
+The "Phasmophobia Sanity Tracker" by Sixthxz is an independent project and is not created by or affiliated with Kinetic Games, its developers, or partners. This service is designed to serve as an educational tool to my girl and the Phasmophobia community, and no copyright infringement is intended.
+
+Fair Use Disclaimer:
+Copyright Disclaimer Under Section 107 of the Copyright Act 1976, allowance is made for "fair use" purposes such as criticism, comment, news reporting, teaching, scholarship, and research. Fair use is a use permitted by copyright statute that might otherwise be infringing.
+
+Website Copyright:
+The design, layout, and functionality of this website are protected by copyright and are owned by J. D (Sixthxz).
+-->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sanity Tracker</title>
+    <style>
+        .settings {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .player-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .lobby {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .hidden {
+        display: none;
+    }
+	.justify {
+	text-align: justify;
+}
+    </style>
+</head>
+<body>
+    <h1>Sannity Tracker</h1>
+    
+    <!-- Sección de Ajustes Iniciales -->
+    <div class="settings justify">
+        <h2>Lobby Config</h2>
+
+        <!-- Cantidad de jugadores -->
+        <label for="playerCount">Player count:</label>
+        <select id="playerCount">
+            <option value="1">1 Player</option>
+            <option value="2">2 Players</option>
+            <option value="3">3 Players</option>
+            <option value="4">4 Players</option>
+        </select>
+
+        <!-- Sanidad inicial -->
+        <label for="initialSanity">Initial Sanity (0 - 100):</label>
+        <input type="range" id="initialSanity" min="0" max="100" step="5" value="50">
+        <output for="initialSanity" id="selectedSanity">50</output>
+
+        <!-- Drenado de sanidad -->
+        <label for="sanityDrain">Sanity Drain:</label>
+        <select id="sanityDrain">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+        </select>
+
+        <!-- Tamaño del mapa -->
+        <label for="mapSize">Map size:</label>
+        <select id="mapSize">
+            <option value="chico">Small</option>
+            <option value="mediano">Medium</option>
+            <option value="grande">Large</option>
+        </select>
+        
+        <!-- Fase de Configuración -->
+        <label for="setupPhase">Setup Phase:</label>
+        <input type="checkbox" id="setupPhase">
+    </div>
+
+    <!-- Variables ocultas para tasas de drenado -->
+    <input type="hidden" id="setupPhaseDrainRate">
+    <input type="hidden" id="normalDrainRate">
+
+    <!-- Botón para aplicar cambios y crear el lobby -->
+    <button id="applyChanges">Create Lobby</button>
+    <!-- Sanidad promedio de los jugadores -->
+    <div class="player-container">
+        <h2>General Sanity</h2>
+        <p>General Sanity: <span id="averageSanity">0%</span></p>
+    </div>
+
+    <!-- Lobby de Jugadores -->
+    <div class="lobby" id="playersLobby"></div>
+
+    <script>
+
+        const initialSanityInput = document.getElementById('initialSanity');
+        const selectedSanity = document.getElementById('selectedSanity');
+        const setupPhaseDrainRate = document.getElementById('setupPhaseDrainRate');
+        const normalDrainRate = document.getElementById('normalDrainRate');
+        const mapSizeSelect = document.getElementById('mapSize');
+        const playerCountSelect = document.getElementById('playerCount');
+        const sanityDrainSelect = document.getElementById('sanityDrain');
+        const setupPhaseCheckbox = document.getElementById('setupPhase');
+        const applyChangesButton = document.getElementById('applyChanges');
+        const playersLobby = document.getElementById('playersLobby');
+        const averageSanityElement = document.getElementById('averageSanity');
+        let averageSanity = 0;
+
+        initialSanityInput.addEventListener('input', function () {
+            selectedSanity.textContent = initialSanityInput.value;
+        });
+
+        applyChangesButton.addEventListener('click', function () {
+            playersLobby.innerHTML = ""; // Limpiar el lobby antes de agregar nuevos jugadores
+
+            const playerCount = parseInt(playerCountSelect.value, 10);
+            
+            setInterval(updateAverageSanity, 1000);
+            // Crear jugadores y agregarlos al lobby
+            for (let i = 1; i <= playerCount; i++) {
+                const player = createPlayer(i);
+            }
+        });
+
+        // Función para actualizar las tasas de drenado según el tamaño del mapa
+        function updateDrainRates() {
+            const mapSize = mapSizeSelect.value;
+            const sanityDrainMultiplier = parseFloat(sanityDrainSelect.value);
+
+            let setupPhaseDrainRateValue, normalDrainRateValue;
+
+            switch (mapSize) {
+                case "chico":
+                    setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
+                    normalDrainRateValue = 0.12 * sanityDrainMultiplier;
+                    break;
+                case "mediano":
+                    setupPhaseDrainRateValue = 0.05 * sanityDrainMultiplier;
+                    normalDrainRateValue = 0.08 * sanityDrainMultiplier;
+                    break;
+                case "grande":
+                    setupPhaseDrainRateValue = 0.03 * sanityDrainMultiplier;
+                    normalDrainRateValue = 0.05 * sanityDrainMultiplier;
+                    break;
+                default:
+                    // Default values if map size is not recognized
+                    setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
+                    normalDrainRateValue = 0.12 * sanityDrainMultiplier;
+                    break;
+            }
+
+            setupPhaseDrainRate.value = setupPhaseDrainRateValue;
+            normalDrainRate.value = normalDrainRateValue;
+        }
+
+        // Event listener para actualizar las tasas de drenado cuando cambie el tamaño del mapa
+        mapSizeSelect.addEventListener('change', updateDrainRates);
+        // Event listener para actualizar las tasas de drenado cuando cambie el multiplicador de sanityDrain
+        sanityDrainSelect.addEventListener('change', updateDrainRates);
+
+        const playerSanityValues = [];
+
+
+        function updateAverageSanity() {
+            console.log("Sanity array elementos: " + playerSanityValues.join(' '));
+
+            const totalPlayers = playerCount.value;
+            
+            playerSanityValues.length = totalPlayers;
+            
+
+            switch (totalPlayers) {
+                case "1":
+                    averageSanity = playerSanityValues[0];
+                    averageSanityElement.textContent = `${(averageSanity+0).toFixed(2)}%`;
+                    console.log("Sanidad 1 players: " + averageSanity);
+                    break;
+                case "2":
+                    averageSanity = (playerSanityValues[0] + playerSanityValues[1]) / totalPlayers;
+                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                    console.log("Sanidad 2 players: " + averageSanity);
+                    break;
+                case "3":
+                    averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2]) / totalPlayers;
+                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                    console.log("Sanidad 3 players: " + averageSanity);
+                    break;
+                case "4":
+                    averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2] + playerSanityValues[3]) / totalPlayers;
+                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                    console.log("Sanidad 4 players: " + averageSanity);
+                    break;
+
+            }
+
+            
+            
+            console.log("Sanidad Global: " + averageSanity);
+        }
+
+
+
+
+        function createPlayer(playerId) {
+            let player = {
+                initialSanity: initialSanityInput.value,
+                sanityDrain: sanityDrainSelect.value,
+                mapSize: mapSizeSelect.value,
+                setupPhase: setupPhaseCheckbox.checked,
+                setupPhaseDrainRate: setupPhaseDrainRate.value,
+                normalDrainRate: normalDrainRate.value,
+                timerInterval: null,
+                startButton: null,
+                resetButton: null,
+                pauseButton: null,
+                resumeButton: null,
+                sanitySpan: null,
+                sanity: parseFloat(initialSanityInput.value)
+
+            };
+            playerSanityValues[playerId - 1] = player.sanity;    
+            // Función para actualizar la sanidad en la página
+            player.updateSanity = function () {
+                player.sanitySpan.textContent = player.sanity.toFixed(2) + "%";
+            };
+
+            // Función para disminuir la sanidad con el tiempo
+            player.decreaseSanity = function () {
+                if (player.sanity > 0) {
+                    player.sanity -= player.setupPhase ? player.setupPhaseDrainRate : player.normalDrainRate;
+                    playerSanityValues[playerId - 1] = player.sanity;
+                    player.updateSanity();
+                    console.log("Sanidad del jugador: "+player.sanity.toFixed(2))
+                    
+                }
+                if (player.sanity <= 0) {
+                    player.sanity = 0;
+                    player.updateSanity();
+                    clearInterval(player.timerInterval);
+                    player.startButton.disabled = true;
+                    player.resetButton.disabled = false;
+                    player.pauseButton.disabled = true;
+                    player.resumeButton.disabled = true;
+                }
+            };
+
+            // Iniciar el temporizador manualmente
+            player.startButton = document.createElement("button");
+            player.startButton.textContent = "Iniciar";
+            player.startButton.addEventListener("click", function () {
+                if (!player.timerInterval) {
+                    player.startTimer();
+                }
+            });
+
+            // Reiniciar la sanidad
+            player.resetButton = document.createElement("button");
+            player.resetButton.textContent = "Reiniciar";
+            player.resetButton.disabled = true;
+            player.resetButton.addEventListener("click", function () {
+                clearInterval(player.timerInterval);
+                player.timerInterval = null;
+                player.sanity = parseFloat(player.initialSanity);
+                player.updateSanity();
+                player.startButton.disabled = false;
+                player.resetButton.disabled = true;
+                player.pauseButton.disabled = true;
+                player.resumeButton.disabled = true;
+
+            });
+
+            // Iniciar el temporizador
+            player.startTimer = function () {
+                player.timerInterval = setInterval(player.decreaseSanity, 1000);
+                player.startButton.disabled = true;
+                player.resetButton.disabled = true;
+                player.pauseButton.disabled = false;
+                player.resumeButton.disabled = true;
+            };
+
+            // Pausar el temporizador
+            player.pauseButton = document.createElement("button");
+            player.pauseButton.textContent = "Pausar";
+            player.pauseButton.disabled = true;
+            player.pauseButton.addEventListener("click", function () {
+                clearInterval(player.timerInterval);
+                player.pauseButton.disabled = true;
+                player.resetButton.disabled = false;
+                player.resumeButton.disabled = false;
+            });
+
+            // Reanudar el temporizador
+            player.resumeButton = document.createElement("button");
+            player.resumeButton.textContent = "Reanudar";
+            player.resumeButton.disabled = true;
+            player.resumeButton.addEventListener("click", function () {
+                player.startTimer();
+            });
+
+            // Crear un div para el jugador
+            let playerDiv = document.createElement("div");
+            playerDiv.classList.add("player-container");
+
+            // Agregar el contenido del jugador al div
+            playerDiv.innerHTML = `
+                <h2>Player ${playerId}</h2>
+                <p>Sanity: <span class="sanity" id="sanity${playerId}">${player.initialSanity}%</span></p>
+            `;
+
+            // Agregar los botones al div del jugador
+            playerDiv.appendChild(player.startButton);
+            playerDiv.appendChild(player.resetButton);
+            playerDiv.appendChild(player.pauseButton);
+            playerDiv.appendChild(player.resumeButton);
+
+            player.sanitySpan = playerDiv.querySelector(`#sanity${playerId}`);
+
+            // Agregar el div del jugador al lobby
+            playersLobby.appendChild(playerDiv);
+
+            return player;
+        }
+         updateDrainRates();
+
+    </script>
+</body>
+</html>
