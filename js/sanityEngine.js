@@ -72,7 +72,7 @@
 
 
         function updateAverageSanity() {
-            console.log("Sanity array elementos: " + playerSanityValues.join(' '));
+            //Depuracion console.log("Sanity array elementos: " + playerSanityValues.join(' '));
 
             const totalPlayers = playerCount.value;
             
@@ -83,29 +83,29 @@
             case "1":
                 averageSanity = playerSanityValues[0];
                 averageSanityElement.textContent = `${(averageSanity+0).toFixed(2)}%`;
-                console.log("Sanidad 1 players: " + averageSanity);
+               //Depuracion console.log("Sanidad 1 players: " + averageSanity);
                 break;
             case "2":
                 averageSanity = (playerSanityValues[0] + playerSanityValues[1]) / totalPlayers;
                 averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                console.log("Sanidad 2 players: " + averageSanity);
+                //Depuracion console.log("Sanidad 2 players: " + averageSanity);
                 break;
             case "3":
                 averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2]) / totalPlayers;
                 averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                console.log("Sanidad 3 players: " + averageSanity);
+                //Depuracion console.log("Sanidad 3 players: " + averageSanity);
                 break;
             case "4":
                 averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2] + playerSanityValues[3]) / totalPlayers;
                 averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                console.log("Sanidad 4 players: " + averageSanity);
+                //Depuracion console.log("Sanidad 4 players: " + averageSanity);
                 break;
 
             }
 
             
             
-            console.log("Sanidad Global: " + averageSanity);
+            //Depuracion console.log("Sanidad Global: " + averageSanity);
         }
 
 
@@ -140,7 +140,7 @@
                     player.sanity -= player.setupPhase ? player.setupPhaseDrainRate : player.normalDrainRate;
                     playerSanityValues[playerId - 1] = player.sanity;
                     player.updateSanity();
-                    console.log("Sanidad del jugador: "+player.sanity.toFixed(2))
+                    //Depuracion console.log("Sanidad del jugador: "+player.sanity.toFixed(2))
                     
                 }
                 if (player.sanity <= 0) {
