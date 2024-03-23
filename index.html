@@ -86,70 +86,84 @@ The design, layout, and functionality of this website are protected by copyright
             padding: 10px;
         }
         .hidden {
-        display: none;
-    }
-	.justify {
-	text-align: justify;
-}
-    </style>
+            display: none;
+        }
+        .justify {
+         text-align: justify;
+     }
+ </style>
 </head>
 <body>
     <h1>Sannity Tracker</h1>
     
+
+
+
     <!-- Sección de Ajustes Iniciales -->
     <div class="settings justify">
         <h2>Lobby Config</h2>
+        <table style="width:100%">
+          <tr>
+            <th>
+                <!-- Cantidad de jugadores -->
+                <label for="playerCount">Player count:</label>
+                <select id="playerCount">
+                    <option value="1">1 Player</option>
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                </select>
+            </th>
+            <th>
+                <!-- Sanidad inicial -->
+                <label for="initialSanity">Initial Sanity (0 - 100):</label>
+                <input type="range" id="initialSanity" min="0" max="100" step="5" value="50">
+                <output for="initialSanity" id="selectedSanity"></output>
+            </th>
+            <th>
+                <!-- Drenado de sanidad -->
+                <label for="sanityDrain">Sanity Drain:</label>
+                <select id="sanityDrain">
+                    <option value="0.5">0.5x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </th>
+            <th>
+                <!-- Tamaño del mapa -->
+                <label for="mapSize">Map size:</label>
+                <select id="mapSize">
+                    <option value="chico">Small</option>
+                    <option value="mediano">Medium</option>
+                    <option value="grande">Large</option>
+                </select>
+            </th>
+            <th>
+                <!-- Fase de Configuración -->
+                <label for="setupPhase">Setup Phase:</label>
+                <input type="checkbox" id="setupPhase">
+            </th> 
+        </tr>
+    </table>
+</div>
 
-        <!-- Cantidad de jugadores -->
-        <label for="playerCount">Player count:</label>
-        <select id="playerCount">
-            <option value="1">1 Player</option>
-            <option value="2">2 Players</option>
-            <option value="3">3 Players</option>
-            <option value="4">4 Players</option>
-        </select>
+<!-- Variables ocultas para tasas de drenado -->
+<input type="hidden" id="setupPhaseDrainRate">
+<input type="hidden" id="normalDrainRate">
 
-        <!-- Sanidad inicial -->
-        <label for="initialSanity">Initial Sanity (0 - 100):</label>
-        <input type="range" id="initialSanity" min="0" max="100" step="5" value="50">
-        <output for="initialSanity" id="selectedSanity">50</output>
+<!-- Botón para aplicar cambios y crear el lobby -->
+<button id="applyChanges">Create Lobby</button>
+<!-- Botón para reiniciar el lobby -->
+<button id="resetLobby">Reset Lobby</button>
+<!-- Sanidad promedio de los jugadores -->
+<div class="player-container">
+    <h2>General Sanity</h2>
+    <p>General Sanity: <span id="averageSanity">0%</span></p>
+</div>
 
-        <!-- Drenado de sanidad -->
-        <label for="sanityDrain">Sanity Drain:</label>
-        <select id="sanityDrain">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2x</option>
-        </select>
-
-        <!-- Tamaño del mapa -->
-        <label for="mapSize">Map size:</label>
-        <select id="mapSize">
-            <option value="chico">Small</option>
-            <option value="mediano">Medium</option>
-            <option value="grande">Large</option>
-        </select>
-        
-        <!-- Fase de Configuración -->
-        <label for="setupPhase">Setup Phase:</label>
-        <input type="checkbox" id="setupPhase">
-    </div>
-
-    <!-- Variables ocultas para tasas de drenado -->
-    <input type="hidden" id="setupPhaseDrainRate">
-    <input type="hidden" id="normalDrainRate">
-
-    <!-- Botón para aplicar cambios y crear el lobby -->
-    <button id="applyChanges">Create Lobby</button>
-    <!-- Sanidad promedio de los jugadores -->
-    <div class="player-container">
-        <h2>General Sanity</h2>
-        <p>General Sanity: <span id="averageSanity">0%</span></p>
-    </div>
-
-    <!-- Lobby de Jugadores -->
-    <div class="lobby" id="playersLobby"></div>
+<!-- Lobby de Jugadores -->
+<div class="lobby" id="playersLobby"></div>
 
 <script type="text/javascript" src="js/sanityEngine.js"></script>
 </body>

@@ -1,4 +1,4 @@
-const initialSanityInput = document.getElementById('initialSanity');
+        const initialSanityInput = document.getElementById('initialSanity');
         const selectedSanity = document.getElementById('selectedSanity');
         const setupPhaseDrainRate = document.getElementById('setupPhaseDrainRate');
         const normalDrainRate = document.getElementById('normalDrainRate');
@@ -7,6 +7,7 @@ const initialSanityInput = document.getElementById('initialSanity');
         const sanityDrainSelect = document.getElementById('sanityDrain');
         const setupPhaseCheckbox = document.getElementById('setupPhase');
         const applyChangesButton = document.getElementById('applyChanges');
+        const resetLobbyButton = document.getElementById('resetLobby');
         const playersLobby = document.getElementById('playersLobby');
         const averageSanityElement = document.getElementById('averageSanity');
         let averageSanity = 0;
@@ -27,6 +28,10 @@ const initialSanityInput = document.getElementById('initialSanity');
             }
         });
 
+        resetLobbyButton.addEventListener('click', function () {
+            location.reload();
+        });
+
         // Función para actualizar las tasas de drenado según el tamaño del mapa
         function updateDrainRates() {
             const mapSize = mapSizeSelect.value;
@@ -35,23 +40,23 @@ const initialSanityInput = document.getElementById('initialSanity');
             let setupPhaseDrainRateValue, normalDrainRateValue;
 
             switch (mapSize) {
-                case "chico":
-                    setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
-                    normalDrainRateValue = 0.12 * sanityDrainMultiplier;
-                    break;
-                case "mediano":
-                    setupPhaseDrainRateValue = 0.05 * sanityDrainMultiplier;
-                    normalDrainRateValue = 0.08 * sanityDrainMultiplier;
-                    break;
-                case "grande":
-                    setupPhaseDrainRateValue = 0.03 * sanityDrainMultiplier;
-                    normalDrainRateValue = 0.05 * sanityDrainMultiplier;
-                    break;
-                default:
+            case "chico":
+                setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
+                normalDrainRateValue = 0.12 * sanityDrainMultiplier;
+                break;
+            case "mediano":
+                setupPhaseDrainRateValue = 0.05 * sanityDrainMultiplier;
+                normalDrainRateValue = 0.08 * sanityDrainMultiplier;
+                break;
+            case "grande":
+                setupPhaseDrainRateValue = 0.03 * sanityDrainMultiplier;
+                normalDrainRateValue = 0.05 * sanityDrainMultiplier;
+                break;
+            default:
                     // Default values if map size is not recognized
-                    setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
-                    normalDrainRateValue = 0.12 * sanityDrainMultiplier;
-                    break;
+                setupPhaseDrainRateValue = 0.09 * sanityDrainMultiplier;
+                normalDrainRateValue = 0.12 * sanityDrainMultiplier;
+                break;
             }
 
             setupPhaseDrainRate.value = setupPhaseDrainRateValue;
@@ -75,26 +80,26 @@ const initialSanityInput = document.getElementById('initialSanity');
             
 
             switch (totalPlayers) {
-                case "1":
-                    averageSanity = playerSanityValues[0];
-                    averageSanityElement.textContent = `${(averageSanity+0).toFixed(2)}%`;
-                    console.log("Sanidad 1 players: " + averageSanity);
-                    break;
-                case "2":
-                    averageSanity = (playerSanityValues[0] + playerSanityValues[1]) / totalPlayers;
-                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                    console.log("Sanidad 2 players: " + averageSanity);
-                    break;
-                case "3":
-                    averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2]) / totalPlayers;
-                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                    console.log("Sanidad 3 players: " + averageSanity);
-                    break;
-                case "4":
-                    averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2] + playerSanityValues[3]) / totalPlayers;
-                    averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
-                    console.log("Sanidad 4 players: " + averageSanity);
-                    break;
+            case "1":
+                averageSanity = playerSanityValues[0];
+                averageSanityElement.textContent = `${(averageSanity+0).toFixed(2)}%`;
+                console.log("Sanidad 1 players: " + averageSanity);
+                break;
+            case "2":
+                averageSanity = (playerSanityValues[0] + playerSanityValues[1]) / totalPlayers;
+                averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                console.log("Sanidad 2 players: " + averageSanity);
+                break;
+            case "3":
+                averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2]) / totalPlayers;
+                averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                console.log("Sanidad 3 players: " + averageSanity);
+                break;
+            case "4":
+                averageSanity = (playerSanityValues[0] + playerSanityValues[1] + playerSanityValues[2] + playerSanityValues[3]) / totalPlayers;
+                averageSanityElement.textContent = `${averageSanity.toFixed(2)}%`;
+                console.log("Sanidad 4 players: " + averageSanity);
+                break;
 
             }
 
@@ -208,8 +213,8 @@ const initialSanityInput = document.getElementById('initialSanity');
 
             // Agregar el contenido del jugador al div
             playerDiv.innerHTML = `
-                <h2>Player ${playerId}</h2>
-                <p>Sanity: <span class="sanity" id="sanity${playerId}">${player.initialSanity}%</span></p>
+            <h2>Player ${playerId}</h2>
+            <p>Sanity: <span class="sanity" id="sanity${playerId}">${player.initialSanity}%</span></p>
             `;
 
             // Agregar los botones al div del jugador
@@ -225,4 +230,4 @@ const initialSanityInput = document.getElementById('initialSanity');
 
             return player;
         }
-         updateDrainRates();
+        updateDrainRates();
